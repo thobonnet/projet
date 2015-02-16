@@ -1,2 +1,1 @@
-À faire:
-- travailler :3
+Travail en cours: Makefile
