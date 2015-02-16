@@ -1,17 +1,14 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 #include "grid.h"
 
-typedef struct grid_s* grid{
+struct grid{
   tile** cells;
   int score;
-}
-  
-typedef unsigned int tile;
+};
 
-typedef enum dir_e {UP,LEFT,DOWN,RIGHT} dir;
-
-grid new_grid (){
+/*grid new_grid (){
   grid g=malloc(sizeof(struct grid));
   assert(g!=NULL);
   g->score=0;
@@ -21,7 +18,7 @@ grid new_grid (){
     for(int y=0;y<GRID_SIDE;y++)
       g->cells[x][y]=0;
   return g;
-}
+  }*/
     
 
 /*void delete_grid (grid g);
