@@ -4,7 +4,7 @@ SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
 DEPS = $(SRC:.c=.d)
 
-all:libgrid.a
+all:libgrid.a test_grid
 
 %d: %c
 	gcc -M $(CPPFLAGS) $< > $@ include $(DEPS)
@@ -12,6 +12,9 @@ all:libgrid.a
 libgrid.a:$(OBJ)
 	ar cr $@ $(OBJ)
 
+test_grid:$(OBJ)
+	gcc -L . $^ -lgrid -o $@
+
 .PHONY : clean
 clean:
-	rm -f *.a *.o
+	rm -f libgrid.a test_grid *.o
