@@ -23,11 +23,20 @@ grid new_grid (){
   return g;
 }
     
+void delete_grid (grid g){
+  for(int x=0;x<GRID_SIDE;x++)
+    free(g->cells[x]);
+  free(g->cells);
+  free(g);
+}
 
-/*void delete_grid (grid g);
-void copy_grid (grid src, grid dst);
+tile get_tile (grid g, int x, int y){
+  assert((x>=0 && x<GRID_SIDE) && (y>=0 && y<GRID_SIDE));
+  return g->cells[x][y];
+}
+
+/*void copy_grid (grid src, grid dst);
 unsigned long int grid_score (grid g);
-tile get_tile (grid g, int x, int y);
 void set_tile (grid g, int x, int y, tile t);
 bool can_move (grid g, dir d);
 bool game_over (grid g);
