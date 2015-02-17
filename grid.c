@@ -34,7 +34,6 @@ delete_grid (grid g){
 
 void
 copy_grid (grid src, grid dst){
-  grid dst=new_grid();
   dst->score=src->score;
   for(int x=0;x<GRID_SIDE;x++)
     for(int y=0;y<GRID_SIDE;y++)
@@ -52,13 +51,15 @@ get_tile (grid g, int x, int y){
   return g->cells[x][y];
 }
 
-void set_tile (grid g, int x, int y, tile t){
+void
+set_tile (grid g, int x, int y, tile t){
+  g->cells[x][y]=t*2;
+  g->score+=t*2;
 }
 
-/*void copy_grid (grid src, grid dst);
-unsigned long int grid_score (grid g);
-void set_tile (grid g, int x, int y, tile t);
+/*
 bool can_move (grid g, dir d);
 bool game_over (grid g);
-void do_move (grid g, dir d);void add_tile (grid g);
+void do_move (grid g, dir d);
+void add_tile (grid g);
 void play (grid g, dir d);*/
