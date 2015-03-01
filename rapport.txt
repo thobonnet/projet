@@ -1,0 +1,11 @@
+BONNET Thomas, JAJOUX Jeremy
+
+Ce qui est fait: Probablement ce qui est nécéssaire pour jouer.
+
+Ce qui ne marche pas: Le test du jeu,incapacité a entrer une action.
+
+Question en Suspens:
+*Comment entrer une touche ou une direction de manière a la faire récupérer par le programme (getch()?).
+*Raccourcir le code est envisageable au vu de nombreuses répétitions.
+*Le programme est-t-il sans bug ?
+
