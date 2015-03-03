@@ -29,7 +29,7 @@ main(int argc, char **argv){
   add_tile(g);
   bool playing=true;
   char c;
-  dir d=0;
+  dir d;
   while(playing){
 	  printf("Enter character: ");
 	  c=getchar();
@@ -48,6 +48,7 @@ main(int argc, char **argv){
 	  }
 	  play(g,d);
 	  afficher_grille(g);
+	  playing=game_over(g);
   }
   printf("GAME OVER\n");
   printf("Your Score is: %lu\n",grid_score(g));
