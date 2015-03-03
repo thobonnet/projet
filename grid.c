@@ -70,7 +70,7 @@ can(grid g,int x1,int y1,int x2,int y2){
 bool
 can_move (grid g, dir d){
   for(int x=0;x<GRID_SIDE;x++){
-    for(int y=0;y<GRID_SIDE;y++){
+    for(int y=1;y<GRID_SIDE;y++){
       switch(d){
       case UP:
 	if(can(g,GRID_SIDE-y,x,GRID_SIDE-y-1,x))
@@ -81,11 +81,11 @@ can_move (grid g, dir d){
 	  return true;
 	break;
       case DOWN:
-	if(can(g,y,x,y+1,x))
+	if(can(g,y-1,x,y,x))
 	  return true;
 	break;
       case RIGHT:
-	if(can(g,x,y,x,y+1))
+	if(can(g,x,y-1,x,y))
 	  return true;
 	break;
       }}}
@@ -96,6 +96,11 @@ bool
 game_over (grid g){
   return !can_move(g,UP) && !can_move(g,LEFT) && !can_move(g,DOWN) && !can_move(g,RIGHT);
 }
+
+/*static void
+push(grid g,int x1,int y1,int x2,int y2){
+  
+}*/
 
 void
 do_move (grid g, dir d){
