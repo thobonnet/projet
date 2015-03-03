@@ -57,50 +57,38 @@ set_tile (grid g, int x, int y, tile t){
   g->cells[x][y]=t;
 }
 
+static bool
+can(grid g,int x1,int y1,int x2,int y2){
+  if(get_tile(g,x1,y1)!=0){
+    if(get_tile(g,x2,y2)!=0){
+      if(get_tile(g,x1,y1)==get_tile(g,x2,y2))
+	return true;}
+    return true;}
+  return false;
+}
+
 bool
 can_move (grid g, dir d){
-  switch(d){
-  case UP:
+  for(int x=0;x<GRID_SIDE;x++){
     for(int y=0;y<GRID_SIDE;y++){
-      for(int x=GRID_SIDE-1;x>0;x--){
-	if(get_tile(g,x,y)!=0){
-	  if(get_tile(g,x-1,y)!=0){
-	    if(get_tile(g,x,y)==get_tile(g,x-1,y))
-	      return true;}
-	  return true;}}}
-    return false;
-    break;
-  case LEFT:
-    for(int x=0;x<GRID_SIDE;x++){
-      for(int y=GRID_SIDE-1;y>0;y--){
-	if(get_tile(g,x,y)!=0){
-	  if(get_tile(g,x,y-1)!=0){
-	    if(get_tile(g,x,y)==get_tile(g,x,y-1))
-	      return true;}
-	  return true;}}}
-    return false;
-    break;
-  case DOWN:
-    for(int y=0;y<GRID_SIDE;y++){
-      for(int x=0;x<GRID_SIDE;x++){
-	if(get_tile(g,x,y)!=0){
-	  if(get_tile(g,x+1,y)!=0){
-	    if(get_tile(g,x,y)==get_tile(g,x+1,y))
-	      return true;}
-	  return true;}}}
-    return false;
-    break;
-  case RIGHT:
-    for(int x=0;x<GRID_SIDE;x++){
-      for(int y=0;y<GRID_SIDE;y++){
-	if(get_tile(g,x,y)!=0){
-	  if(get_tile(g,x,y+1)!=0){
-	    if(get_tile(g,x,y)==get_tile(g,x,y+1))
-	      return true;}
-	  return true;}}}
-    return false;
-    break;
-  }
+      switch(d){
+      case UP:
+	if(can(g,GRID_SIDE-y,x,GRID_SIDE-y-1,x))
+	  return true;
+	break;
+      case LEFT:
+	if(can(g,x,GRID_SIDE-y,x,GRID_SIDE-y-1))
+	  return true;
+	break;
+      case DOWN:
+	if(can(g,y,x,y+1,x))
+	  return true;
+	break;
+      case RIGHT:
+	if(can(g,x,y,x,y+1))
+	  return true;
+	break;
+      }}}
   return false;
 }
 
@@ -119,6 +107,7 @@ do_move (grid g, dir d){
 	for(int x=0;x<GRID_SIDE;x++){
 	  if(get_tile(g,x,y)!=0 && x!=i){
 	    set_tile(g,i,y,get_tile(g,x,y));
+	    set_tile(g,x,y,0);
 	    i+=1;
 	  }
 	}
@@ -133,6 +122,7 @@ do_move (grid g, dir d){
 	for(int x=0;x<GRID_SIDE;x++){
 	  if(get_tile(g,x,y)!=0 && x!=i){
 	    set_tile(g,i,y,get_tile(g,x,y));
+	    set_tile(g,x,y,0);
 	    i+=1;
 	  }
 	}
@@ -144,6 +134,7 @@ do_move (grid g, dir d){
 	for(int y=GRID_SIDE;y>=0;y--){
 	  if(get_tile(g,x,y)!=0 && y!=i){
 	    set_tile(g,x,i,get_tile(g,x,y));
+	    set_tile(g,x,y,0);
 	    i-=1;
 	  }
 	}
@@ -158,6 +149,7 @@ do_move (grid g, dir d){
 	for(int y=GRID_SIDE;y>=0;y--){
 	  if(get_tile(g,x,y)!=0 && y!=i){
 	    set_tile(g,x,i,get_tile(g,x,y));
+	    set_tile(g,x,y,0);
 	    i-=1;
 	  }
 	}
@@ -169,6 +161,7 @@ do_move (grid g, dir d){
 	for(int x=GRID_SIDE;x>=0;x--){
 	  if(get_tile(g,x,y)!=0 && x!=i){
 	    set_tile(g,i,y,get_tile(g,x,y));
+	    set_tile(g,x,y,0);
 	    i-=1;
 	  }
 	}
@@ -183,6 +176,7 @@ do_move (grid g, dir d){
 	for(int x=0;x<GRID_SIDE;x++){
 	  if(get_tile(g,x,y)!=0 && x!=i){
 	    set_tile(g,i,y,get_tile(g,x,y));
+	    set_tile(g,x,y,0);
 	    i-=1;
 	  }
 	}
@@ -194,6 +188,7 @@ do_move (grid g, dir d){
 	for(int y=0;y<GRID_SIDE;y++){
 	  if(get_tile(g,x,y)!=0 && y!=i){
 	    set_tile(g,x,i,get_tile(g,x,y));
+	    set_tile(g,x,y,0);
 	    i+=1;
 	  }
 	}
@@ -208,6 +203,7 @@ do_move (grid g, dir d){
 	for(int y=0;y<GRID_SIDE;y++){
 	  if(get_tile(g,x,y)!=0 && y!=i){
 	    set_tile(g,x,i,get_tile(g,x,y));
+	    set_tile(g,x,y,0);
 	    i+=1;
 	  }
 	}
