@@ -64,7 +64,7 @@ can_move (grid g, dir d){
     for(int y=1;y<GRID_SIDE;y++){
       switch(d){
       case UP:
-    if(get_tile(g,y,x)!=0 && (get_tile(g,y-1,x)==0 || get_tile(g,y,x)==get_tile(g,y-1,x)))
+	if(get_tile(g,y,x)!=0 && (get_tile(g,y-1,x)==0 || get_tile(g,y,x)==get_tile(g,y-1,x)))
 	  return true;
 	break;
       case LEFT:
@@ -105,59 +105,59 @@ tile_fusion(grid g,int x1,int y1,int x2,int y2){
 
 static int
 move(grid g,int x,int y,int i,int a){
-	int b=0
-	if(a==1){										//permet de separer les operation sur ligne(0) des operations sur colonne(1).
-	  if(get_tile(g,x,y)!=0){						//si la cellule indiquee par le pointeur est vide on lui donne la tuile de cette cellule.
-		if(get_tile(g,i,y)==0)						//on verifie que la cellule regardee est pleine sinon on passe a la suivante.
-			move_tile(g,x,y,i,y);
-		else{
-  		  if(get_tile(g,x,y)==get_tile(g,i,y))		//si la cellule indiquee par le pointeur peu fusionner avec cette cellule on le fait.
-  			  tile_fusion(g,x,y,i,y);
-  		  else										//sinon on l'accole a la cellule pointee.
-  			if(x!=i+1)
-  				move_tile(g,x,y,i+1,y);}
-	  	  b+=1;										//on pointe maintenant la cellule deplacee dans les deux derniers cas.
-	  }
-	}
-	else{											//on traite le meme cas avec les lignes.
-	  if(get_tile(g,x,y)!=0){
-		if(get_tile(g,x,i)==0)
-			move_tile(g,x,y,x,i);
-		else{
-	      if(get_tile(g,x,y)==get_tile(g,x,i))
-	    	  tile_fusion(g,x,y,x,i);
-	      else
-	    	if(y!=i+1)
-	    		move_tile(g,x,y,x,i+1);}
-		  b+=1;
-	  }
-	}
-	return b;
+  int b=0;
+  if(a==1){                                  //permet de separer les operation sur ligne(0) des operations sur colonne(1).
+    if(get_tile(g,x,y)!=0){                  //si la cellule indiquee par le pointeur est vide on lui donne la tuile de cette cellule.
+      if(get_tile(g,i,y)==0)	             //on verifie que la cellule regardee est pleine sinon on passe a la suivante.
+	move_tile(g,x,y,i,y);
+      else{
+	if(get_tile(g,x,y)==get_tile(g,i,y)) //si la cellule indiquee par le pointeur peu fusionner avec cette cellule on le fait.
+	  tile_fusion(g,x,y,i,y);
+	else			             //sinon on l'accole a la cellule pointee.
+	  if(x!=i+1)
+	    move_tile(g,x,y,i+1,y);}
+      b=1;		                     //on pointe maintenant la cellule deplacee dans les deux derniers cas.
+    }
+  }
+  else{				             //on traite le meme cas avec les lignes.
+    if(get_tile(g,x,y)!=0){
+      if(get_tile(g,x,i)==0)
+	move_tile(g,x,y,x,i);
+      else{
+	if(get_tile(g,x,y)==get_tile(g,x,i))
+	  tile_fusion(g,x,y,x,i);
+	else
+	  if(y!=i+1)
+	    move_tile(g,x,y,x,i+1);}
+      b=1;
+    }
+  }
+  return b;
 }
 
 void
 do_move (grid g, dir d){
   if(can_move(g,d)){
-	  int i;	//pointeur sur une cellule vide ou n'ayant pas encore effectue de fusion et sans cellule vide qui la precede.
-	  for(int x=0;x<GRID_SIDE;x++){
-		  i=0;
-		  for(int y=1;y<GRID_SIDE;y++){
-			  switch(d){
-			  case UP:
-				  i+=move(g,y,x,i,1);
-				  break;
-			  case LEFT:
-				  i+=move(g,x,y,i,0);
-				  break;
-			  case DOWN:
-				  i+=move(g,GRID_SIDE-1-y,x,GRID_SIDE-1-i,1);
-				  break;
-			  case RIGHT:
-				  i+=move(g,GRID_SIDE-1-x,y,GRID_SIDE-1-i,0);
-				  break;
-			  }
-		  }
-	  }
+    int i;	//pointeur sur une cellule vide ou n'ayant pas encore effectue de fusion et sans cellule vide qui la precede.
+    for(int x=0;x<GRID_SIDE;x++){
+      i=0;
+      for(int y=1;y<GRID_SIDE;y++){
+	switch(d){
+	case UP:
+	  i+=move(g,y,x,i,1);
+	  break;
+	case LEFT:
+	  i+=move(g,x,y,i,0);
+	  break;
+	case DOWN:
+	  i+=move(g,GRID_SIDE-1-y,x,GRID_SIDE-1-i,1);
+	  break;
+	case RIGHT:
+	  i+=move(g,GRID_SIDE-1-x,y,GRID_SIDE-1-i,0);
+	  break;
+	}
+      }
+    }
   }
 }
 
