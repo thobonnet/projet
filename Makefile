@@ -13,7 +13,7 @@ libgrid.a:$(OBJ)
 	ar cr $@ $(OBJ)
 
 test_grid:$(OBJ)
-	gcc -L . $^ -lgrid -lm -o $@
+	gcc -L . $^ -lgrid -lm -lcurses -o $@
 
 .PHONY : clean
 clean:
