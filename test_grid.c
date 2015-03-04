@@ -29,6 +29,7 @@ int
 main(int argc, char **argv){
   grid g = new_grid();
   add_tile(g);
+  add_tile(g);
   bool playing=true;
   int c;
   dir d;
