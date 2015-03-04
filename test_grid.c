@@ -22,7 +22,7 @@ afficher_grille_ncurses(grid g){
     printw("+\n");
   }
   printw("SCORE:%d\n",grid_score(g));
-  printw("move with zqsd or pav_num and quit with x\n");
+  printw("move with keypad arrows,zqsd or pav_num and quit with x\n");
 }
 
 int
@@ -36,28 +36,33 @@ main(int argc, char **argv){
   initscr(); // Initialisation
   cbreak();  // de
   noecho();  // nCurses
+  keypad(stdscr,TRUE);
   afficher_grille_ncurses(g);
   while(playing){
 	  c=getch();
 	  switch(c){
-	  case 122:
-	  case 56:
+	  case 122: //Z
+	  case 56:  //8
+	  case KEY_UP:
 	    d=UP;
 	    break;
-	  case 113:
-	  case 52:
+	  case 113: //Q
+	  case 52:  //4
+	  case KEY_LEFT:
 	    d=LEFT;
 	    break;
-	  case 115:
-	  case 53:
-	  case 50:
+	  case 115: //S
+	  case 53:  //5
+	  case 50:  //2
+	  case KEY_DOWN:
 	    d=DOWN;
 	    break;
-	  case 100:
-	  case 54:
+	  case 100: //D
+	  case 54:  //6
+	  case KEY_RIGHT:
 	    d=RIGHT;
 	    break;
-	  case 120:
+	  case 120: //X
 	    playing=false;
 	    break;	    
 	  }
