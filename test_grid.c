@@ -3,6 +3,8 @@
 #include <math.h>
 #include "grid.h"
 
+#include <curses.h>
+
 
 
 void
@@ -23,35 +25,65 @@ afficher_grille(grid g){
   }
 }
 
+void
+afficher_grille_ncurses(grid g){
+  for(int i = 0; i < GRID_SIDE; i++){
+    printw("+------");
+  }
+  printw("+\n");
+
+  for(int x = 0; x < GRID_SIDE; x++){
+    printw("|");
+    for(int y = 0; y < GRID_SIDE; y++)
+      printw(" %4d |", get_tile(g,x,y)==0?0:(int)pow(2,get_tile(g,x,y)));
+    printw("\n");
+    for(int i = 0; i < GRID_SIDE; i++)
+      printw("+------");
+    printw("+\n");
+  }
+}
+
 int
 main(int argc, char **argv){
   grid g = new_grid();
   add_tile(g);
   bool playing=true;
-  char c;
+  int c;
   dir d;
+  initscr(); // Initialisation
+  cbreak();  // de
+  noecho();  // nCurses
+  afficher_grille_ncurses(g);
   while(playing){
-	  printf("Enter character: ");
-	  c=getchar();
-	  printf("character %d\n",c);
+	  printw("Enter direction: ");
+	  c=getch();
+	  printw("character %d\n",c);
 	  switch(c){
 	  case 122:
 	    d=UP;
+	    break;
 	  case 113:
 	    d=LEFT;
+	    break;
 	  case 115:
 	    d=DOWN;
+	    break;
 	  case 100:
 	    d=RIGHT;
+	    break;
 	  default:
 	    playing=false;
 	  }
 	  play(g,d);
-	  afficher_grille(g);
-	  playing=game_over(g);
+	  clear();
+	  afficher_grille_ncurses(g);
+	  playing=!game_over(g);
   }
   printf("GAME OVER\n");
   printf("Your Score is: %lu\n",grid_score(g));
   delete_grid(g);
+  
+  endwin();
+  
   return EXIT_SUCCESS;
 }
