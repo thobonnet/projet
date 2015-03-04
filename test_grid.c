@@ -22,7 +22,7 @@ afficher_grille_ncurses(grid g){
     printw("+\n");
   }
   printw("SCORE:%d\n",grid_score(g));
-  printw("move with zqsd and quit with x\n");
+  printw("move with zqsd or pav_num and quit with x\n");
 }
 
 int
@@ -41,15 +41,20 @@ main(int argc, char **argv){
 	  c=getch();
 	  switch(c){
 	  case 122:
+	  case 56:
 	    d=UP;
 	    break;
 	  case 113:
+	  case 52:
 	    d=LEFT;
 	    break;
 	  case 115:
+	  case 53:
+	  case 50:
 	    d=DOWN;
 	    break;
 	  case 100:
+	  case 54:
 	    d=RIGHT;
 	    break;
 	  case 120:

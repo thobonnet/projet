@@ -17,4 +17,4 @@ test_grid:$(OBJ)
 
 .PHONY : clean
 clean:
-	rm -f libgrid.a test_grid *.o
+	rm -f libgrid.a test_grid *.o *~
