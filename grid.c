@@ -99,7 +99,7 @@ move_tile(grid g,int x1,int y1,int x2,int y2){
 static void
 tile_fusion(grid g,int x1,int y1,int x2,int y2){
   set_tile(g,x2,y2,get_tile(g,x1,y1)+1);
-  g->score+=pow(2,get_tile(g,x1,y1));
+  g->score+=pow(2,get_tile(g,x2,y2));
   set_tile(g,x1,y1,0);
 }
 
@@ -112,16 +112,16 @@ do_move (grid g, dir d){
       for(int y=1;y<GRID_SIDE;y++){
 	switch(d){
 	case UP:
-	  if(get_tile(g,y,x)!=0){                  //si la cellule indiquee par le pointeur est vide on lui donne la tuile de cette cellule.
+	  if(get_tile(g,y,x)!=0){                    //si la cellule indiquee par le pointeur est vide on lui donne la tuile de cette cellule.
 	    if(get_tile(g,i,x)==0)	             //on verifie que la cellule regardee est pleine sinon on passe a la suivante.
 	      move_tile(g,y,x,i,x);
 	    else{
-	      if(get_tile(g,y,x)==get_tile(g,i,x)) //si la cellule indiquee par le pointeur peu fusionner avec cette cellule on le fait.
+	      if(get_tile(g,y,x)==get_tile(g,i,x))   //si la cellule indiquee par le pointeur peu fusionner avec cette cellule on le fait.
 		tile_fusion(g,y,x,i,x);
 	      else			             //sinon on l'accole a la cellule pointee.
 		if(y!=i+1)
-		  move_tile(g,y,x,i+1,x);}
-	    i+=1;		                     //on pointe maintenant la cellule deplacee dans les deux derniers cas.
+		  move_tile(g,y,x,i+1,x);
+	      i+=1;}		                     //on pointe maintenant la cellule deplacee dans les deux derniers cas.
 	  }
 	  break;
 	case LEFT:
@@ -133,21 +133,21 @@ do_move (grid g, dir d){
 		tile_fusion(g,x,y,x,i);
 	      else
 		if(y!=i+1)
-		  move_tile(g,x,y,x,i+1);}
-	    i+=1;
+		  move_tile(g,x,y,x,i+1);
+	      i+=1;}
 	  }
 	  break;
 	case DOWN:
-	  if(get_tile(g,GRID-SIDE-1-y,x)!=0){
+	  if(get_tile(g,GRID_SIDE-1-y,x)!=0){
 	    if(get_tile(g,GRID_SIDE-1-i,x)==0)
 	      move_tile(g,GRID_SIDE-1-y,x,GRID_SIDE-1-i,x);
 	    else{
 	      if(get_tile(g,GRID_SIDE-1-y,x)==get_tile(g,GRID_SIDE-1-i,x))
 		tile_fusion(g,GRID_SIDE-1-y,x,GRID_SIDE-1-i,x);
 	      else
-		if(y!=i-1)
-		  move_tile(g,GRID_SIDE-1-y,x,GRID_SIDE-2-i,x);}
-	    i+=1;
+		if(y!=i+1)
+		  move_tile(g,GRID_SIDE-1-y,x,GRID_SIDE-2-i,x);
+	      i+=1;}
 	  }
 	  break;
 	case RIGHT:
@@ -158,9 +158,9 @@ do_move (grid g, dir d){
 	      if(get_tile(g,x,GRID_SIDE-1-y)==get_tile(g,x,GRID_SIDE-1-i))
 		tile_fusion(g,x,GRID_SIDE-1-y,x,GRID_SIDE-1-i);
 	      else
-		if(y!i-1)
-		  move_tile(g,x,GRID_SIDE-1-y,x,GRID_SIDE-2-i);}
-	    i+=1;
+		if(y!=i+1)
+		  move_tile(g,x,GRID_SIDE-1-y,x,GRID_SIDE-2-i);
+	      i+=1;}
 	  }
 	  break;
 	}
@@ -188,7 +188,6 @@ add_tile (grid g){
   srand(time(NULL)+n);
   int c=rand()%(n+1);
   int v=rand()%100;
-  printf("c:%d ,v:%d \n",c,v);
   set_tile(g,t[c][0],t[c][1],v>90?2:1);
   for(int i=0;i<n;i++)
     free(t[i]);
