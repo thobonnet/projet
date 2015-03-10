@@ -58,25 +58,31 @@ set_tile (grid g, int x, int y, tile t){
   g->cells[x][y]=t;
 }
 
+//verifie si un deplacement ou une fusion est possible entre deux cellules.
+bool
+can(grid g,int x1,int y1,int x2,int y2){
+  return get_tile(g,x1,y1)!=0 && (get_tile(g,x2,y2)==0 || get_tile(g,x1,y1)==get_tile(g,x2,y2));
+}
+
 bool
 can_move (grid g, dir d){
   for(int x=0;x<GRID_SIDE;x++){
     for(int y=1;y<GRID_SIDE;y++){
       switch(d){
       case UP:
-	if(get_tile(g,y,x)!=0 && (get_tile(g,y-1,x)==0 || get_tile(g,y,x)==get_tile(g,y-1,x))) //on vérifie si une tuile peu bouger ou fusionner dans la cellule précédente sinon on passe à une autre tuile.
+	if(can(g,y,x,y-1,x))
 	  return true;
 	break;
       case LEFT:
-	if(get_tile(g,x,y)!=0 && (get_tile(g,x,y-1)==0 || get_tile(g,x,y)==get_tile(g,x,y-1)))
+	if(can(g,x,y,x,y-1))
 	  return true;
 	break;
       case DOWN:
-	if(get_tile(g,y-1,x)!=0 && (get_tile(g,y,x)==0 || get_tile(g,y,x)==get_tile(g,y-1,x)))
+	if(can(g,y-1,x,y,x))
 	  return true;
 	break;
       case RIGHT:
-	if(get_tile(g,x,y-1)!=0 && (get_tile(g,x,y)==0 || get_tile(g,x,y)==get_tile(g,x,y-1)))
+	if(can(g,x,y-1,x,y))
 	  return true;
 	break;
       }}}
@@ -105,63 +111,56 @@ tile_fusion(grid g,int x1,int y1,int x2,int y2){
   set_tile(g,x1,y1,0);
 }
 
+//effectue le movement d'une tuile, les parametres decoulent de la direction de do_move.
 static int
-move(grid g,int x,int y,int i,int j,dir d){
+move(grid g,int x,int y,int i,int j,int ii,int jj){
   int a=0;
-  if(get_tile(g,x,y)!=0){                    //si la cellule indiquee par le pointeur est vide on lui donne la tuile de cette cellule.
-    if(get_tile(g,i,j)==0)	             //on verifie que la cellule regardee est pleine sinon on passe a la suivante.
-      move_tile(g,x,y,i,j);
+  if(get_tile(g,x,y)!=0){ //si la cellule est vide on passe.
+    if(get_tile(g,i,j)==0)
+      move_tile(g,x,y,i,j); //si la cellule cible est vide on deplace notre tuile.
     else{
-      if(get_tile(g,x,y)==get_tile(g,i,j))   //si la cellule indiquee par le pointeur peu fusionner avec cette cellule on le fait.
-	tile_fusion(g,x,y,i,j);
-      else			             //sinon on l'accole a la cellule pointee.
-	switch(d){
-	case UP:
-	  move_tile(g,x,y,i+1,j);
-	  break;
-	case LEFT:
-	  move_tile(g,x,y,i,j+1);
-	  break;
-	case DOWN:
-	  move_tile(g,x,y,i-1,j);
-	  break;
-	case RIGHT:
-	  move_tile(g,x,y,i,j-1);
-	  break;}
-      a=1;}		                     //on pointe maintenant la cellule deplacee dans les deux derniers cas.
+      if(get_tile(g,x,y)==get_tile(g,i,j))
+	tile_fusion(g,x,y,i,j); //sinon on les fusionne si possible.
+      else
+	move_tile(g,x,y,ii,jj); //sinon on l'accole.
+      a=1;}
   }
   return a;
 }
 
 void
 do_move (grid g, dir d){
-  if(can_move(g,d)){
-    int i;	//pointeur sur une cellule vide ou n'ayant pas encore effectue de fusion et sans cellule vide qui la precede.
-    for(int x=0;x<GRID_SIDE;x++){ //parcours de la grille.
-      i=0;
-      for(int y=1;y<GRID_SIDE;y++){
-	switch(d){
-	case UP:
-	  i+=move(g,y,x,i,x,d);
-	  break;
-	case LEFT:
-	  i+=move(g,x,y,x,i,d);
-	  break;
-	case DOWN:
-	  i+=move(g,GRID_SIDE-1-y,x,GRID_SIDE-1-i,x,d);
-	  break;
-	case RIGHT:
-	  i+=move(g,x,GRID_SIDE-1-y,x,GRID_SIDE-1-i,d);
-	  break;
-	}
+  int i; //pointe une cellule vide ou fusionnable lors de move.
+  for(int x=0;x<GRID_SIDE;x++){ //parcours de la grille.
+    i=0;
+    for(int y=1;y<GRID_SIDE;y++){
+      switch(d){
+      case UP:
+	i+=move(g,y,x,i,x,i+1,x);
+	break;
+      case LEFT:
+	i+=move(g,x,y,x,i,x,i+1);
+	break;
+      case DOWN:
+	i+=move(g,GRID_SIDE-1-y,x,GRID_SIDE-1-i,x,GRID_SIDE-2-i,x);
+	break;
+      case RIGHT:
+	i+=move(g,x,GRID_SIDE-1-y,x,GRID_SIDE-1-i,x,GRID_SIDE-2-i);
+	break;
       }
     }
   }
 }
 
+int
+rand_1_sur_10(){
+  int v=rand()%1000;
+  return v>900?2:1;
+}
+
 void
 add_tile (grid g){
-  int** t=malloc(sizeof(int*)*GRID_SIDE*GRID_SIDE);//initialisation d'un tableau pointant les cellules vides.
+  int** t=malloc(sizeof(int*)*GRID_SIDE*GRID_SIDE);//tableau de cellules vides
   assert(t!=NULL);
   int n=0; //nombre de cellules vide de la grille.
   for(int y=0;y<GRID_SIDE;y++){
@@ -174,11 +173,11 @@ add_tile (grid g){
 	n+=1;
       }
     }
-  }
+  }   
   srand(time(NULL)+n);
   int c=rand()%(n);//on selectionne au hasard une cellule vide
-  int v=rand()%1000;//on utilise cette valeur pour ajouter une tuile de valeur 4 une fois sur 10.
-  set_tile(g,t[c][0],t[c][1],v>900?2:1);
+  int v=rand_1_sur_10();
+  set_tile(g,t[c][0],t[c][1],v);
   for(int i=0;i<n;i++)//on libere le tableau de cellules vide
     free(t[i]);
   free(t);
@@ -186,8 +185,6 @@ add_tile (grid g){
 
 void
 play (grid g, dir d){
-  if(can_move(g,d)){
-    do_move(g,d);
-    add_tile(g);
-  }
+  do_move(g,d);
+  add_tile(g);
 }
