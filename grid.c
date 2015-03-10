@@ -59,7 +59,7 @@ set_tile (grid g, int x, int y, tile t){
 }
 
 //verifie si un deplacement ou une fusion est possible entre deux cellules.
-bool
+static bool
 can(grid g,int x1,int y1,int x2,int y2){
   return get_tile(g,x1,y1)!=0 && (get_tile(g,x2,y2)==0 || get_tile(g,x1,y1)==get_tile(g,x2,y2));
 }
@@ -152,7 +152,7 @@ do_move (grid g, dir d){
   }
 }
 
-int
+static int
 rand_1_sur_10(){
   int v=rand()%1000;
   return v>900?2:1;
