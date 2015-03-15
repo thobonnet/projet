@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include <math.h>
-#include <time.h>
 #include "grid.h"
 
 struct grid_s{
@@ -174,7 +173,6 @@ add_tile (grid g){
       }
     }
   }   
-  srand(time(NULL)+n);
   int c=rand()%(n);//on selectionne au hasard une cellule vide
   int v=rand_1_sur_10();
   set_tile(g,t[c][0],t[c][1],v);
