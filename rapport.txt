@@ -1,11 +1,10 @@
 BONNET Thomas, JAJOUX Jeremy
 
-Ce qui est fait: Probablement ce qui est nécéssaire pour jouer.
+Ce qui est fait: Jeu fonctionnel, possibilité de selectionner si on veut jouer sur le terminal ou a l'aide de ncurses, deux simples programmes qui finissent le jeu automatiquement, un programme pour faire tourner 100 fois un programme automatique afin de voir le pourcentage de réussite.
 
-Ce qui ne marche pas: Le test du jeu,incapacité a entrer une action.
+Ce qui ne marche pas: Aucun problème à priori
 
-Question en Suspens:
-*Comment entrer une touche ou une direction de manière a la faire récupérer par le programme (getch()?).
-*Raccourcir le code est envisageable au vu de nombreuses répétitions.
-*Le programme est-t-il sans bug ?
+A faire: .s'assurer qu'il n'y ai aucun bug
+         .vérifier que l'on produit bien ce qui est demandé pour la première partie(libgrid.a)
+		 .commencer la seconde partie avec le mode graphique et les strategies
 
