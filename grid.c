@@ -57,10 +57,15 @@ set_tile (grid g, int x, int y, tile t){
   g->cells[x][y]=t;
 }
 
-//verifie si un deplacement ou une fusion est possible entre deux cellules.
+/**
+ * \brief verifie si un deplacement ou une fusion 
+ *        est possible entre deux cellules.
+ */
 static bool
 can(grid g,int x1,int y1,int x2,int y2){
-  return get_tile(g,x1,y1)!=0 && (get_tile(g,x2,y2)==0 || get_tile(g,x1,y1)==get_tile(g,x2,y2));
+  return get_tile(g,x1,y1)!=0
+    && (get_tile(g,x2,y2)==0
+	|| get_tile(g,x1,y1)==get_tile(g,x2,y2));
 }
 
 bool
@@ -90,10 +95,14 @@ can_move (grid g, dir d){
 
 bool
 game_over (grid g){
-  return !can_move(g,UP) && !can_move(g,LEFT) && !can_move(g,DOWN) && !can_move(g,RIGHT);
+  return !can_move(g,UP) && !can_move(g,LEFT)
+    && !can_move(g,DOWN) && !can_move(g,RIGHT);
 }
 
-//fait bouger la tuile en (x1,y1) a la position (x2,y2).
+/**
+ * \brief fait glisser la tuile en (x1,y1) 
+ *        a la position (x2,y2).
+ */
 static void
 move_tile(grid g,int x1,int y1,int x2,int y2){
   if(x1!=x2 || y1!=y2){
@@ -102,7 +111,11 @@ move_tile(grid g,int x1,int y1,int x2,int y2){
   }
 }
 
-//fusionne la tuile en (x1,y1) a la tuile en (x2,y2) la nouvelle tuile est a la place de cette derniere, on ajoute egalement la valeur de la nouvelle tuile au score.
+/**
+ * \brief fusionne la tuile en (x1,y1) a la tuile en (x2,y2) 
+ *        la nouvelle tuile est a la place de cette derniere,
+ *        on ajoute egalement la valeur de la nouvelle tuile au score.
+ */
 static void
 tile_fusion(grid g,int x1,int y1,int x2,int y2){
   set_tile(g,x2,y2,get_tile(g,x1,y1)+1);
@@ -110,7 +123,10 @@ tile_fusion(grid g,int x1,int y1,int x2,int y2){
   set_tile(g,x1,y1,0);
 }
 
-//effectue le movement d'une tuile, les parametres decoulent de la direction de do_move.
+/**
+ * \brief effectue le movement d'une tuile, 
+ *        les parametres decoulent de la direction de do_move.
+ */
 static int
 move(grid g,int x,int y,int i,int j,int ii,int jj){
   int a=0;
@@ -151,6 +167,9 @@ do_move (grid g, dir d){
   }
 }
 
+/**
+ * \brief retourne 1 ou une fois sur 9 retourne 2
+ */
 static int
 rand_1_sur_10(){
   int v=rand()%1000;

@@ -7,7 +7,9 @@ DEPS = $(SRC:.c=.d)
 all:libgrid.a test_grid
 
 %d: %c
-	gcc -M $(CPPFLAGS) $< > $@ include $(DEPS)
+	gcc -M $(CPPFLAGS) $< > $@
+
+include $(DEPS)
 
 libgrid.a:$(OBJ)
 	ar cr $@ $(OBJ)
@@ -17,4 +19,4 @@ test_grid:$(OBJ)
 
 .PHONY : clean
 clean:
-	rm -f libgrid.a test_grid *.o *~
+	rm -f libgrid.a test_grid $(OBJ) $(DEPS) *~
