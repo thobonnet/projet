@@ -4,19 +4,25 @@ SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
 DEPS = $(SRC:.c=.d)
 
-all:libgrid.a test_grid
+all:libgrid.a play test
 
 %d: %c
 	gcc -M $(CPPFLAGS) $< > $@
 
 include $(DEPS)
 
-libgrid.a:$(OBJ)
-	ar cr $@ $(OBJ)
+libgrid.a:play.o grid.o
+	ar cr $@ $^
 
-test_grid:$(OBJ)
-	gcc -L . $^ -lgrid -lm -lcurses -o $@
+play:
+	gcc -L . -lgrid -lm -lcurses -o $@
+
+test:verif_test.o grid.o
+	gcc $^ -lm -o $@
+
+%o: %c
+	gcc $^ -o $@ $(LDFLAGS)
 
 .PHONY : clean
 clean:
-	rm -f libgrid.a test_grid $(OBJ) $(DEPS) *~
+	rm -f libgrid.a play test $(OBJ) $(DEPS) *~

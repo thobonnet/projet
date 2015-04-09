@@ -58,8 +58,8 @@ set_tile (grid g, int x, int y, tile t){
 }
 
 /**
- * \brief verifie si un deplacement ou une fusion 
- *        est possible entre deux cellules.
+ * \brief check if a move or a fusion 
+ *        is possible between two cells.
  */
 static bool
 can(grid g,int x1,int y1,int x2,int y2){
@@ -100,8 +100,8 @@ game_over (grid g){
 }
 
 /**
- * \brief fait glisser la tuile en (x1,y1) 
- *        a la position (x2,y2).
+ * \brief move a tile from (x1,y1) 
+ *        to the (x2,y2) cell.
  */
 static void
 move_tile(grid g,int x1,int y1,int x2,int y2){
@@ -112,9 +112,9 @@ move_tile(grid g,int x1,int y1,int x2,int y2){
 }
 
 /**
- * \brief fusionne la tuile en (x1,y1) a la tuile en (x2,y2) 
- *        la nouvelle tuile est a la place de cette derniere,
- *        on ajoute egalement la valeur de la nouvelle tuile au score.
+ * \brief do a fusion between the tile in (x1,y1) and the tile in (x2,y2) 
+ *        the new tile is placed in the (x2,y2) cell,
+ *        the score is updated with the new tile value.
  */
 static void
 tile_fusion(grid g,int x1,int y1,int x2,int y2){
@@ -124,8 +124,7 @@ tile_fusion(grid g,int x1,int y1,int x2,int y2){
 }
 
 /**
- * \brief effectue le movement d'une tuile, 
- *        les parametres decoulent de la direction de do_move.
+ * \brief move a tile, parameters comes from do_move.
  */
 static int
 move(grid g,int x,int y,int i,int j,int ii,int jj){
@@ -168,7 +167,7 @@ do_move (grid g, dir d){
 }
 
 /**
- * \brief retourne 1 ou une fois sur 9 retourne 2
+ * \brief return 1 or return 2 one time out of 10.
  */
 static int
 rand_1_sur_10(){
