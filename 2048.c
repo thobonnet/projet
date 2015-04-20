@@ -59,8 +59,8 @@ afficherGrille(grid g){
         11,
         MLV_COLOR_WHITE, MLV_rgba(89,85,81,255), MLV_COLOR_WHITE,
         MLV_TEXT_LEFT,
-        MLV_HORIZONTAL_CENTER, MLV_VERTICAL_CENTER);
-  }*/
+        MLV_HORIZONTAL_CENTER, MLV_VERTICAL_CENTER);*/
+  }
 }
 
 int 
