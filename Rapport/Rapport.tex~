@@ -1,0 +1,17 @@
+\documentclass[12pt]{article}
+
+\usepackage[T1]{fontenc} 
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+
+\title{Rapport du projet \baselineskip Environnement de programmation}
+\date{}
+\author{BONNET Thomas , JAJOUX Jeremy}
+
+\begin{document}
+
+\maketitle
+
+Ecrire du texte ici...
+
+\end{document}
