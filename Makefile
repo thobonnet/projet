@@ -1,10 +1,10 @@
-CFLAGS = -g -Wall -std=c99
+CFLAGS = -g -Wall -std=c99 `pkg-config --cflags MLV`
 CPPFLAGS = -I .
 SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
 DEPS = $(SRC:.c=.d)
 
-all:libgrid.a play test
+all:libgrid.a play test 2048
 
 %d: %c
 	gcc -M $(CPPFLAGS) $< > $@
@@ -15,14 +15,17 @@ libgrid.a:play.o grid.o
 	ar cr $@ $^
 
 play:
-	gcc -L . -lgrid -lm -lcurses -o $@
+	gcc $(CFLAGS) -L . -lgrid -lm -lcurses -o $@
+
+2048:2048.o 
+	gcc $(CFLAGS) $^ -L . `pkg-config --libs MLV` -lgrid -o $@
 
 test:verif_test.o grid.o
-	gcc $^ -lm -o $@
+	gcc $(CFLAGS) $^ -lm -o $@
 
 %o: %c
 	gcc $^ -o $@ $(LDFLAGS)
 
 .PHONY : clean
 clean:
-	rm -f libgrid.a play test $(OBJ) $(DEPS) *~
+	rm -f libgrid.a play 2048 test $(OBJ) $(DEPS) *~
