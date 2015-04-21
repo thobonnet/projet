@@ -4,14 +4,37 @@
 \usepackage[utf8]{inputenc}
 \usepackage[francais]{babel}
 
-\title{Rapport du projet \baselineskip Environnement de programmation}
+\title{{\bf Rapport de projet} \\ \normalsize{Environnement de Programmation}}
 \date{}
-\author{BONNET Thomas , JAJOUX Jeremy}
+\author{\normalsize{BONNET \bsc{Thomas} , JAJOUX \bsc{Jeremy}}}
 
 \begin{document}
 
 \maketitle
 
-Ecrire du texte ici...
+\section{Fonctions de base du jeu
+\\{\small Soit les fonctions de grid.c}}
+
+Ici la plupart des fonctions étaient simples à programmer car elles sont de constructions moindres et ont un objectif unique et court.\\
+
+Les fonctions ayant le plus posé de problèmes furent les fonctions relatives aux mouvement des tuiles, c'est à dire ``can\_move'' et ``do\_move'', car ces dernières nécessitent de prendre en compte toutes les différentes situations possibles lors d'un mouvement ou d'une fusion de tuile.\\
+
+C'est pourquoi, lors des premières ébauches du code, toutes ces fnctions étaient très longues et répétitives afin d'inclure toutes les possibilité sans se soucier de la structures de celles-ci.
+L'étape suivante à donc consistée à réduire la quantité de code et à créer des fonctions annexes, comme ``move'' ou ``tile\_fusion'', pour alléger le code de chaque fonction et permettre une disparition des répétitions avec des sous-fonction avec différents arguments selon les situation plutôt qu'une section de code répétée.
+
+\section{Fonctions pour faire fonctionner le jeu
+\\{\small Les fonctions contenues dans play.c}}
+
+
+\section{Les Tests
+\\{\small Trouvés dans test.c}}
+
+
+\section{Interface Graphique
+\\{\small Le corps du fichier 2048.c}}
+
+\begin{verbatim}
+Peut etre utile pour écrire le code
+\end{verbatim}
 
 \end{document}

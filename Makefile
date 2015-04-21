@@ -20,7 +20,7 @@ play:
 2048:2048.o 
 	gcc $(CFLAGS) $^ -L . `pkg-config --libs MLV` -lgrid -o $@
 
-test:verif_test.o grid.o
+test:test.o grid.o
 	gcc $(CFLAGS) $^ -lm -o $@
 
 %o: %c
