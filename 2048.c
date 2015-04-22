@@ -104,22 +104,22 @@ dir
 getDirection(MLV_Keyboard_button c){
    switch(c){
    case MLV_KEYBOARD_z:
-   case MLV_KEYBOARD_8:
+   case MLV_KEYBOARD_KP8:
    case MLV_KEYBOARD_UP:
      return UP;
      break;
    case MLV_KEYBOARD_q:
-   case MLV_KEYBOARD_4:
+   case MLV_KEYBOARD_KP4:
    case MLV_KEYBOARD_LEFT:
      return LEFT;
      break;
    case MLV_KEYBOARD_s:
-   case MLV_KEYBOARD_5:
+   case MLV_KEYBOARD_KP5:
    case MLV_KEYBOARD_DOWN:
      return DOWN;
      break;
    case MLV_KEYBOARD_d:
-   case MLV_KEYBOARD_6:
+   case MLV_KEYBOARD_KP6:
    case MLV_KEYBOARD_RIGHT:
      return RIGHT;
      break;  
