@@ -19,25 +19,130 @@ Ici la plupart des fonctions étaient simples à programmer car elles sont de co
 
 Les fonctions ayant le plus posé de problèmes furent les fonctions relatives aux mouvement des tuiles, c'est à dire ``can\_move'' et ``do\_move'', car ces dernières nécessitent de prendre en compte toutes les différentes situations possibles lors d'un mouvement ou d'une fusion de tuile.\\
 
-C'est pourquoi, lors des premières ébauches du code, toutes ces fnctions étaient très longues et répétitives afin d'inclure toutes les possibilité sans se soucier de la structures de celles-ci.
-L'étape suivante à donc consistée à réduire la quantité de code et à créer des fonctions annexes, comme ``move'' ou ``tile\_fusion'', pour alléger le code de chaque fonction et permettre une disparition des répétitions avec des sous-fonction avec différents arguments selon les situation plutôt qu'une section de code répétée.
+C'est pourquoi, lors des premières ébauches du code, toutes ces fonctions étaient très longues et répétitives afin d'inclure toutes les possibilité sans se soucier de la structures de celles-ci.\\
+
+L'étape suivante a donc consistée à réduire la quantité de code et à créer des fonctions annexes, comme ``move'' ou ``tile\_fusion'', pour alléger le code de chaque fonction et permettre une élimination des répétitions avec des sous-fonction dotés de différents arguments pour fonctionner selon la situation plutôt qu'une section de code répétée avec de légères modifications.\\
+
+Par exemple dand la sous-fonction suivante, les variables x  et y qui parcourent la grille peuvent êtres interchangées afin de parcourir la grille de bas en haut et de droite à gauche. Les variables i et j repèrent la cellule de destination et les variables ii et jj la cellule vide suivante dans le cas où un mouvement est possible mais pas une fusion.\\
+\begin{verbatim}
+static int
+move(grid g,int x,int y,int i,int j,int ii,int jj){
+  int a=0;
+  if(get_tile(g,x,y)!=0){
+    if(get_tile(g,i,j)==0)
+      move_tile(g,x,y,i,j);
+    else{
+      if(get_tile(g,x,y)==get_tile(g,i,j))
+	tile_fusion(g,x,y,i,j);
+      else
+	move_tile(g,x,y,ii,jj);
+      a=1;}
+  }
+  return a;
+}
+\end{verbatim}
+On arrive alors à un code relativement compact et un peu illisible si on ne l'as pas écrit malheureusement.\\
+
+Un autre obstacle s'est manifesté dans la fonction ``add\_tile'', cette dernière nécessite de prendre en compte toutes les cellules vides et ajouter de manière aléatoire dans une de ces cellules la valeur 2 ou, dans 10\% des cas, la valeur 4.\\
+
+Pour ce faire il a fallut créer un tableau de cellules vides en parcourant la grille, puis à l'aide de la fonction ``random'' séléctionner une des cases du tableau correpondant à une cellule vide au hasard. On ajoute ensuite une tuile de valeur décidée également à l'aide de random. L'utilisation de random s'est faite à tâton, plus particulièrement l'initialisation de la seed en tandem avec la fonction ``time'' qui devait se trouver avant l'éxecution du jeu dans son entièreté.\\
+
+Au final ce fut une partie du projet qui a nécessité beaucoup de temps et de changement pour fonctionner comme désiré et de manière la plus optimisée possible.
 
 \section{Fonctions pour faire fonctionner le jeu
 \\{\small Les fonctions contenues dans play.c}}
 
+Cette partie du code a été relativement compliquée à faire fonctionner et à nécessité un grand nombre de changement que ce soit pour améliorer son fonctionnement, optimiser son code ou ajouter de nouvelles options.\\
+
+Plus que la création et l'affichage de la grille qui sont d'une écriture simple, le réel problème fut de faire fonctionner la grille comme voulut en entrant une touche. Plusieurs problèmes se sont accumulés pour ce problème précis, tout d'abord il fallait réussir à lire une touche entrée par l'utilisateur, ceci à été accomplis à l'aide de la fonction ``getchar'' qui, couplée à la fonction ``getDirection'' pour sélectionner la direction en fonction de la touche préssée, à permis de faire fonctionner le jeu correctement. Cependant ``getchar'' renvoie l'un après l'autre la touche préssée et la touche Entrée utilisée pour la validation, ce qui faisait faire deux fois le même mouvement à la grille. Nous avons pallié à cela en ajoutant à l'execution du programme une variable booléenne ``change'' qui permettait de vérifier qu'une touche de direction valide venait d'être préssée et ne l'execute qu'une fois. Ce problème n'est pas étonnament pas apparut dans la version ncurses du jeu, probablement dû à un fonctionnement différent de ``getch''.\\
+
+Un autre problème, qui a été plus rapide à régler, était de faire en sorte que le programme termine bien le jeu. Pour cela il a fallut à nouveau ajouter une variable boléenne ``playing'' qui voit sa valeur changer en accord avec la fonction ``game\_over'' après chaque execution de mouvement et stoppe la fonction lorsque plus aucun mouvement n'est possible.\\
+\begin{verbatim}
+void
+play_terminal(grid g){
+  bool playing=true;
+  bool change=true;
+  int c;
+  dir d;
+
+  afficher_grille_terminal(g);
+  while(playing){
+    c=getchar();
+
+    if(validDirection(c)){
+      d = getDirection(c);
+      change=true;
+    }
+    
+    if(c == TX)
+      playing = false;
+    
+    else if(can_move(g,d) && change){
+      play(g,d);
+      afficher_grille_terminal(g);
+      playing=!game_over(g);
+    }
+    change=false;
+  }  
+}
+\end{verbatim}
+Le programme est également doté d'un peu de code après la fin du jeu qui permet d'afficher la fin du jeu, le score obtenu et la plus grande valeur de tuile obtenue dans le but de faciliter de futures tests d'efficacité sur les stratégies.
 
 \section{Les Tests
 \\{\small Trouvés dans test.c}}
 
+L'objectif de cette partie était de tester le bon fonctionnement des fonctions, en remplissant des grilles de façon à créer des situations et vérifier que le résultat obtenu est bien le résultat attendu dans cette situation. L'aspect le plus important de cette partie était donc de faire en sorte de couvrir toute les situations possibles.Cette reflexion s'applique principalement pour les fonctions ``can\_move'' et ``do\_move'' qui peuvent chacune être utilisé dans 4 directions différentes. Les test des autres fonctions restent relativement simple, s'agissant dans la plus part des cas d'une comparaison de grilles.\\
+
+Dans le cas de la fonction ``can\_move'', il faut vérifier que la fonction ne renvoie pas tout le temps true ou false mais aussi qu'elle renvoie bien true lorsqu'un mouvement est possible et false lorsqu'un mouvement n'est pas possible. Pour cela une grille est remplis manuellement de façon a n'autoriser que deux mouvement. Le test consiste donc a vérifier le résultat de la fonction ``can\_move'' sur la grille précédemment remplis.\\
+
+Le test de la fonction ``do\_move'' est sensiblement le même. La grille utilisé pour ce test est la même que celle utilisé pour le test ``can\_move'' car en plus de n'autoriser que certaines direction, elle ne permet aussi aucune fusion. Ainsi lorsqu'un mouvement est réalisé dans une direction possible, un n'est plus possible de refaire un mouvement dans cette même direction. Le test consiste donc pour cette fonction a vérifier qu'un mouvement dans une direction est impossible après avoir effectué un mouvement dans cette même direction.
+
 \section{Le Makefile}
 
+Il y a peut de chose à dire ici car nous n'avons pas beaucoup d'expérience dans la création d'un Make fonctionnel, cependant il permet de compiler le programme du jeu, les test et la librairie sans problème.\\
+
+Il est un peu regrettable que nous n'ayons pas fait en sorte que tout soit disposé dans différents dossier et tout les fichiers et la compilation doivent se faire à la racine.
+
 \section{Les Stratégies}
+
+Probablement la partie la plus infructueuse du projet, la stratégie que l'on a ici a été créée à partir d'un concept simple et contre toute attente marche correctement, les stratégies rapides et efficientes sont les mêmes avec seulement une différence de profondeur.\\
+
+La stratégie par du fait que le score est changé lors d'une fusion et augmente de la valeur de la nouvelle tuile. Ainsi on peu supposer que si le score est grand, on possède également des tuiles de valeur importantes, puisqu'on veut atteindre la tuile 2048 c'est intéressant. Cette stratégie execute donc une simple récursion en jouant les quatres direction possibles sur autant de copie de la grille actuelle et conserve la direction qui aboutit au meilleur score. On ajoute ici une varible ``depth'' qui répète cette opération pour autant de mouvement à la suite qu'indiqué par sa valeur.\\
+
+Ceci ne devrait pas très bien marcher dû à la nature aléatoire du placement de tuile, ainsi un mouvement prédit par la fonction obtiendra le même score que le mouvement réel mais tout mouvement subséquents provoqué par la recursion n'auras pas nécessairement la même valeur que le mouvement réel. En effet la version efficiente de la stratégie qui possède une valeur de depth plus élevée est moins efficace que la version rapide, ceci vient du fait qu'en augmentant le nombre de récursion on augmente le nombre de fausses prédictions.\\
+
+Cependant faute de meilleure stratégie c'est celle-ci que nous conservons.
 
 \section{Interface Graphique
 \\{\small Le corps du fichier 2048.c}}
 
-%\begin{verbatim}
-%Option utile pour écrire du code
-%\end{verbatim}
+Le but de cette partie était de pouvoir jouer au jeu 2048 sur une interface graphique en dehors du terminal. Pour cela l'interface graphique de l'application à été réalisé à l'aide de la bibliothèque MLV.\\
+
+L'affichage consiste principalement en un positionnement de ``text box'' carrés, représentant chacun une tuile de la grille, de même taille les un à la suite des autres, en modifiant les coordonnées de ces derniers après chaque placement, dans le but de créer une grille de taille GRIDE\_SIDE.\\
+
+Chacun de ces carrés contient ainsi la valeur correspondant à son emplacement dans la grille passé en paramètre. Dans un soucis de lisibilité, ces carrés sont de couleurs différentes en fonction de la couleur qu'ils contiennent. Pour cela, une fonction ``pickColor'' à été mise en place, renvoyant la couleur correspondant à la valeur de la tuile passé en paramètre. Cette fonction est donc appelée avant la création de chacun des textbox pour récupérer la couleur correspondant à la valeur qu'il contient.\\
+
+En dehors de la grille, on ne retrouve uniquement que le score positionné en dessous de la grille ainsi qu'un court message indiquant les commandes de jeu.
+
+L'un des problème rencontré lors de la création de cet affichage, est lié à la façon dont la bibliothèque MLV nous permet de gérer la police d'écriture. En effet, il n'est pas possible de choisir ne serait-ce que la taille de la police lors de la création d'un text box ou d'un texte.\\
+Pour cela, il est nécessaire de charger une police d'écriture dans une variable de type MLV\_Font, en spécifiant le chemin de l'écriture et sa taille, et de la passer en paramètre lors de la création du text box ou du texte pour pouvoir l'utiliser.
+
+\begin{verbatim}
+MLV_Font* font_footer = MLV_load_font( "fonts/helveticaneue.ttf" , 20 );
+  MLV_draw_text_box_with_font(0, HAUTEUR - 100, LARGEUR, 100,
+   "Play with ZQSD || 8456 || Arrows keys\n Press X to QUIT.", 
+    font_footer, 6,COLOR_BACKGROUND, COLOR_TEXT, COLOR_BACKGROUND, 
+    MLV_TEXT_CENTER,MLV_HORIZONTAL_CENTER, MLV_VERTICAL_CENTER);
+
+MLV_free_font(font_footer);
+\end{verbatim}
+
+Il est ensuite nécessaire de libérer la police chargé en faisant un MLV\_free\_font après chaque affichage de la grille, l'application n'arrivant plus à charger le police après un certain temps d'execution sans cette instructions, faisant ainsi planter l'application.\\
+
+L'un des autres points important de cette partie était l'affichage de message en fin de parties, que ce soit une victoire ou un game over.\\
+Ainsi lorsqu'une fin de partie est détecté, un message est affiché par dessus la grille indiquant à l'utilisateur qu'il a perdu en cas de game over, ou qu'il a gagné en cas de victoire. Cependant nous avons fait le choix de pouvoir laisser la liberté à l'utilisateur de pouvoir continuer de jouer même après avoir gagné (avoir atteint 2048).
+Pour résoudre ce problème, un booléen est vérifier avant l'appel à l'affichage de la victoire pour savoir si la victoire doit être affiché ou non.\\
+Concrètement, lors de la premiere victoire, le booléen rentrera dans la condition et la victoire sera ainsi affiché, proposant à l'utilisateur de continuer de jouer. Ensuite si le joueur choisit de continuer de jouer, l'état du booléen sera modifié, bloquant l'affichage de la victoire pour les futures mouvements.
+
 
 \end{document}
