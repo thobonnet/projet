@@ -29,12 +29,15 @@ L'étape suivante à donc consistée à réduire la quantité de code et à cré
 \section{Les Tests
 \\{\small Trouvés dans test.c}}
 
+\section{Le Makefile}
+
+\section{Les Stratégies}
 
 \section{Interface Graphique
 \\{\small Le corps du fichier 2048.c}}
 
-\begin{verbatim}
-Peut etre utile pour écrire le code
-\end{verbatim}
+%\begin{verbatim}
+%Option utile pour écrire du code
+%\end{verbatim}
 
 \end{document}
