@@ -94,10 +94,10 @@ afficherGrille(grid g){
 
 bool
 validDirection(MLV_Keyboard_button c){
-  return c == MLV_KEYBOARD_z || c==MLV_KEYBOARD_8|| c == MLV_KEYBOARD_UP
-    || c == MLV_KEYBOARD_q || c==MLV_KEYBOARD_4 || c == MLV_KEYBOARD_LEFT
-    || c == MLV_KEYBOARD_s || c==MLV_KEYBOARD_5 || c == MLV_KEYBOARD_DOWN
-    || c == MLV_KEYBOARD_d || c==MLV_KEYBOARD_6 || c == MLV_KEYBOARD_RIGHT;
+  return c == MLV_KEYBOARD_z || c==MLV_KEYBOARD_KP8|| c == MLV_KEYBOARD_UP
+    || c == MLV_KEYBOARD_q || c==MLV_KEYBOARD_KP4 || c == MLV_KEYBOARD_LEFT
+    || c == MLV_KEYBOARD_s || c==MLV_KEYBOARD_KP5 || c == MLV_KEYBOARD_DOWN
+    || c == MLV_KEYBOARD_d || c==MLV_KEYBOARD_KP6 || c == MLV_KEYBOARD_RIGHT;
 }
 
 dir
